@@ -8,7 +8,7 @@ export default function RespCardList(props) {
           <nav key={index}>
             <img src={resp.owner.avatar_url} width="70" height="70" alt="" />
             <br />
-            <a className="list" href={resp.html_url}>
+            <a href={resp.html_url}>
               {resp.name}
             </a>
             <br />
