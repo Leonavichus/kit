@@ -8,7 +8,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       resps: [],
-      content: ""
+      content: "",
+      page: 1
     };
     this.search = this.search.bind(this);
   }
@@ -16,6 +17,7 @@ class App extends React.Component {
   async search() {
     let content = document.getElementById("search-text").value;
     let sort = document.getElementById("sort").value;
+    let page = this.state.page;
     if (!content) alert("Вы ничего не ввели");
     else {
       let response = await axios.get(
@@ -24,6 +26,8 @@ class App extends React.Component {
           content +
           "&sort=" +
           sort +
+          "&page=" +
+          page +
           "&per_page=10"
       );
 
@@ -31,6 +35,26 @@ class App extends React.Component {
       this.setState(() => {
         return { resps: response };
       });
+    }
+  }
+
+  nextPage() {
+    this.setState(
+      (state) => {
+        return { page: state.page + 1 };
+      },
+      () => this.search()
+    );
+  }
+
+  prevPage() {
+    if (this.state.page !== 1) {
+      this.setState(
+        (state) => {
+          return { page: this.state.page - 1 };
+        },
+        () => this.search()
+      );
     }
   }
 
@@ -46,6 +70,9 @@ class App extends React.Component {
           <option value="followers">Followers</option>
         </select>
         <RespCardList resps={this.state.resps} />
+        <button onClick={() => this.prevPage()}>back</button>
+        <button onClick={() => this.nextPage()}>next</button>
+        <h4>Страница: {this.state.page}</h4>
       </div>
     );
   }
